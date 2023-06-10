@@ -2,13 +2,13 @@
 <div class="max-w-7xl mx-auto pt-7 pb-16 border-2 border-gray-800 rounded-2xl">
     <h2 class="text-center text-6xl font-medium mb-7">Exchange Rate:</h2>
     <div class="flex justify-center space-x-4">
-        <div class="mr-2 bg-green-700 p-6 rounded-md">
+        <div class="bg-green-700 p-6 rounded-md">
             <select name="rate_to_uah" class="text-5xl border-2 border-black mr-5" [(ngModel)]="first_currency" (change)="changingFirstValue()">
                 <option *ngFor="let currency of currencies_to" value="{{currency}}">{{currency}}</option>
             </select>
             <input type="text" class="rounded-md border-black border-4 text-5xl w-80 px-2" [(ngModel)]="first_value" (input)="changingSecondValue()">
         </div>
-        <div class="flex items-center mr-2">
+        <div class="flex items-center mx-2">
             <span class="text-5xl">&lrarr;</span>
         </div>
         <div class="bg-green-700 p-6 rounded-md">
