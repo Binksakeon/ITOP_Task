@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CurrencyRate } from './currency_rate';
+import { CalculationAndActionsService } from '../calculation-and-actions.service';
 
 @Component({
   selector: 'app-main',
@@ -7,31 +7,42 @@ import { CurrencyRate } from './currency_rate';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
-  rates_to_uah! :{rate:number,cc:string}[];
-  //list of currencies needed to convert
-  currencies: string[] = ['CAD','KZT','SEK','CHF','PLN','TRY','RUB'];
+  constructor(private calculationServie: CalculationAndActionsService){}
+  //list with all objects from api
+  rates_to_uah:{rate:number,cc:string}[]=[];
   //list of currencies needed to convert to
-  currencies_to: string[] = ['UAH','USD','EUR','GBP','JPY'];
+  currencies_to: string[] = ['UAH','USD','EUR','GBP','JPY','PLN','KZT'];
   //list of objects with currencies needed to convert to
   rates_of_currencies_to!: {rate:number,cc:string}[];
-
-  rates:CurrencyRate[]=[];
-  async ngOnInit() {
-    let data= await fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json');
-    this.rates_to_uah = await data.json();
-    //filling list of objects with currencies needed to convert to
-    this.rates_of_currencies_to = this.rates_to_uah.filter((elem)=>{
-      return this.currencies_to.includes(elem.cc,0)
-    });
-    
-    this.currencies.forEach((currency_name)=>{
-      //list of objects with currencies needed to convert
-      let needed_to_convert = this.rates_to_uah.find((elem)=>{return elem.cc===currency_name});
-      if(needed_to_convert!==undefined)
-        //list of objects of the CurrencyRate class
-        this.rates.push(new CurrencyRate(needed_to_convert,this.rates_of_currencies_to));
-    });
+  //values of first input+select
+  first_value:number=0;
+  first_currency:string='UAH';
+  //values of second input+select
+  second_value:number=0;
+  second_currency:string='UAH';
+  //rates of currencies
+  first_rate!:number;
+  second_rate!:number;
+  //changing rates based on first and second currency names
+  change() {
+    [this.first_rate,this.second_rate] = this.calculationServie.changeRates(this.first_currency,this.second_currency);
   }
-
-
+  //getting information from the api
+  async ngOnInit() {
+    this.rates_to_uah = await this.calculationServie.fetchData()
+    //filling list of objects with currencies needed to convert
+    this.rates_of_currencies_to = this.calculationServie.findRates();
+    //iniliazing rates of currensies
+    this.change();
+  }
+  //changing second value based on first value+first currency/rate
+  changingSecondValue(){
+    this.change();
+    this.second_value = this.calculationServie.calculateSecondValue(this.first_value);
+  }
+  //changing first value based on second value+first currency/rate
+  changingFirstValue(){
+    this.change();
+    this.first_value = this.calculationServie.calculateFirstValue(this.second_value);
+  }
 }
