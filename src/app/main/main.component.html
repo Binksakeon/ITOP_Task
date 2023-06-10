@@ -1,10 +1,13 @@
-<div>
-    <div>
-        <input type="text">
-        <select name="rates_to_uah">
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="CAD">CAD</option>
+<main>
+<div class="max-w-7xl mx-auto pt-5">
+    <div *ngFor="let rate of rates" class="mb-4 bg-green-700 p-6 flex items-center">
+        <span class="text-5xl mr-2 w-1/12">{{rate.currency_name}}</span>
+        <input type="text" class="rounded-md border-black border-4 text-5xl w-64 mr-2 px-2" [(ngModel)]="rate.value" >
+        <span class="text-5xl mr-2">/</span>
+        <select name="rate_to_uah" class="text-5xl border-2 border-black mr-5" [(ngModel)]="rate.convert_to_name">
+            <option *ngFor="let currency of currencies_to" value="{{currency}}">{{currency}}</option>
         </select>
+        <span class="text-5xl">- {{rate.convertTo()}}</span>
     </div>
 </div>
+</main>

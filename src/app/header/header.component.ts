@@ -30,8 +30,8 @@ export class HeaderComponent implements OnInit {
         }
       })
       
-      this.usd = +(1/header_rates.usd).toFixed(6);
-      this.eur = +(1/header_rates.eur).toFixed(6);
+      this.usd = +(header_rates.usd/1).toFixed(6);
+      this.eur = +(header_rates.eur/1).toFixed(6);
     }
   }
 }
